@@ -21,8 +21,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 const routes: { name: string; to: string }[] = [
-  { name: "index", to: "/doctor" },
-  { name: "me", to: "/doctor/me" },
+  { name: "Dashboard", to: "/doctor" },
+  { name: "My Patients", to: "/doctor/my" },
   { name: "login", to: "/login" },
 ];
 
