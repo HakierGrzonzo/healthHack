@@ -1,8 +1,9 @@
-import { CircularProgress, Box, Typography, Card, CardContent } from "@mui/material";
-import { json, LoaderFunction } from "@remix-run/node";
+import { CircularProgress, Box, Typography, Card, CardContent, Alert, AlertTitle } from "@mui/material";
+import { ErrorBoundaryComponent, json, LoaderFunction } from "@remix-run/node";
 import { useLoaderData, useTransition } from "@remix-run/react";
 import { fhirObservationClient, fhirPatientClient } from "~/fhir";
 import { Patient } from "~/Patient";
+import { group } from "~/utils";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const patient = await fhirPatientClient.patient.getPatient1(params.patientID)
@@ -46,7 +47,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export default function () {
   const {patient, observations}: {patient: Patient, observations: Observation[]} = useLoaderData();
-  console.log(observations)
   const transition = useTransition();
   if (transition.state === "loading") {
     return (
@@ -68,6 +68,8 @@ export default function () {
   const address = patient?.address?.at(0)
   const socialSecurity = patient.identifier?.find(i => i.type?.coding?.at(0)?.code === "SS")
 
+  const observationGroups = group(observations, o => o.code.text)
+
   return (
     <Box sx={{marginTop: 1, display: 'flex', flexWrap: 'wrap', gap: 4}}>
       <Card>
@@ -82,13 +84,32 @@ export default function () {
           {socialSecurity?.type?.coding?.at(0)?.display}: {socialSecurity?.value}
         </CardContent>
       </Card>
-      {observations.map(observation => (
-      <Card key={observation.id}>
+      {Object.entries(observationGroups).map(entry => {
+        const [group, observations] = entry;
+        return (
+      <Card key={group}>
         <CardContent>
-          {observation.code.text} - {observation?.valueQuantity?.value} {observation?.valueQuantity?.unit}
+        {group}, {observations.length}
+        {observations.map(o => (
+          <p key={o.id}>
+            {o?.valueQuantity?.value} - {o?.issued}
+          </p>
+        ))}
         </CardContent>
       </Card>
-      ))}
+      )})}
     </Box>
   );
+}
+
+export const ErrorBoundary: ErrorBoundaryComponent = ({error}) => {
+  return (
+    <Alert severity="error" sx={{margin: 5, width: "calc(100vw - 10cm)"}}>
+      <AlertTitle>An unexpected error has occured!</AlertTitle>
+      <code>
+        {error.name} - {error.message}
+      </code>
+      <pre>{error.stack}</pre>
+    </Alert>
+  )
 }
