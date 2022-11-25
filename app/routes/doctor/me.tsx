@@ -1,3 +1,10 @@
+import { Typography } from "@mui/material";
+
 export default function () {
-  return <p>me</p>;
+  return (
+    <article>
+      <Typography variant="h1">Wooo</Typography>
+      foo
+    </article>
+  );
 }
