@@ -1,3 +1,4 @@
+import { AppBar, createTheme, CssBaseline, ThemeProvider, Typography } from "@mui/material";
 import type { MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -15,14 +16,25 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function App() {
+  const theme = createTheme()
   return (
     <html lang="en">
       <head>
         <Meta />
         <Links />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
       </head>
       <body>
-        <Outlet />
+        <CssBaseline/>
+        <ThemeProvider theme={theme}>
+          <AppBar>
+            <Typography variant="h1">Wololo</Typography>
+          </AppBar>
+          <Outlet />
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
