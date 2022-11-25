@@ -14,28 +14,21 @@ import {
   useNavigate,
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { loaderPocketBase } from "~/pocketbase";
+import { fhirPatientClient } from "~/fhir";
+import { Patient } from "~/Patient";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const pb = loaderPocketBase(request);
-  const patients = await pb.collection("patients").getFullList(200, {
-    filter: `doctor = "${pb.authStore.baseModel.id}"`,
-  });
-  return json(patients);
+  const patients = await fhirPatientClient.patient.getPatient();
+  return json(JSON.parse(patients).entry.map(e => e.resource));
 };
 
-interface IPatient {
-  name: string;
-  id: string;
-  doctor: string;
-}
 
 export const meta: MetaFunction = () => {
   return { title: "My Patients" };
 };
 
 export default function () {
-  const patients: IPatient[] = useLoaderData();
+  const patients: Patient[] = useLoaderData();
   const [currentPatient, setCurrentPatient] = useState<string | null>(null);
   const location = useLocation();
   useEffect(() => {
@@ -47,7 +40,7 @@ export default function () {
     }
   }, [location, patients, setCurrentPatient]);
   const navigate = useNavigate();
-  const handleSelectChange = (patient: IPatient) => {
+  const handleSelectChange = (patient: Patient) => {
     // The select value will be extracted from the url
     navigate(`./${patient.id}`);
   };
@@ -59,11 +52,11 @@ export default function () {
           labelId="my-patient-select"
           label="Patient"
           value={patients.find((p) => p.id === currentPatient) ?? ""}
-          onChange={(e) => handleSelectChange(e.target.value as IPatient)}
+          onChange={(e) => handleSelectChange(e.target.value as Patient)}
         >
           {patients.map((patient) => (
             <MenuItem value={patient} key={patient.id}>
-              {patient.name}
+              {patient.name[0].given}
             </MenuItem>
           ))}
         </Select>

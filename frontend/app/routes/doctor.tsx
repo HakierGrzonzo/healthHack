@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { json, LoaderFunction } from "@remix-run/node";
-import { Link, Outlet, useLoaderData, useLocation } from "@remix-run/react";
+import { Link, Outlet, useLoaderData, useMatches } from "@remix-run/react";
 import { useState } from "react";
 import { loaderPocketBase } from "~/pocketbase";
 
@@ -29,7 +29,8 @@ const routes: { name: string; to: string }[] = [
 export default function Index() {
   const { user } = useLoaderData();
   const theme = useTheme();
-  const { pathname: currentPage } = useLocation();
+  const matches = useMatches()
+  const matchCandidates = matches.filter(m => routes.map(r => r.to).includes(m.pathname))
   const [menuOpen, setMenuOpen] = useState<boolean>(true);
   return (
     <Box>
@@ -88,7 +89,7 @@ export default function Index() {
         >
           <List sx={{ width: "5cm" }} component="nav">
             {routes.map((route) => {
-              const isSelected = currentPage === route.to;
+              const isSelected = matchCandidates.at(-1)?.pathname === route.to;
               return (
                 <Link
                   to={route.to}
