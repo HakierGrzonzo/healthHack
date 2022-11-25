@@ -1,4 +1,11 @@
-import { Alert, Button, Card, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  Card,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { ActionFunction, json, MetaFunction, redirect } from "@remix-run/node";
 import { Form, useActionData, useTransition } from "@remix-run/react";
@@ -11,7 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
     await pb
       .collection("users")
       .authWithPassword(formData.get("email"), formData.get("password"));
-    return redirect("/", {
+    return redirect("/doctor", {
       headers: {
         "Set-Cookie": pb.authStore.exportToCookie(),
       },
@@ -51,13 +58,29 @@ export default function Login() {
             <Typography variant="h1">Hello</Typography>
             <Typography variant="subtitle1">Welcome to whih2</Typography>
             {actionMsg && <Alert severity="error">{actionMsg.msg}</Alert>}
-            <TextField name="email" type="email" id="email" label="email" />
-            <TextField
-              name="password"
-              type="password"
-              id="password"
-              label="password"
-            />
+            {transition.state !== "submitting" ? (
+              <>
+                <TextField name="email" type="email" id="email" label="email" />
+                <TextField
+                  name="password"
+                  type="password"
+                  id="password"
+                  label="password"
+                />
+              </>
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "4cm",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
             <Button type="submit" disabled={transition.state === "submitting"}>
               Submit
             </Button>
