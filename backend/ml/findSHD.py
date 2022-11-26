@@ -1,8 +1,7 @@
 from os import listdir, path
 import json
 
-ROOT = r""
-
+ROOT = path.join(path.dirname(__file__),'hackathon-alivecors')
 patientsID = []
 patientsDiseases = []
 
@@ -30,9 +29,9 @@ for dir in listdir(ROOT):
         patientsDiseases.append(diseases)
 #print(patientsID)
 #print(patientsDiseases)
-#for i in range(len(patientsID)):
-#    print(patientsID[i])
-#    print(patientsDiseases[i])
+for i in range(len(patientsID)):
+    print(patientsID[i])
+    print(patientsDiseases[i])
 
 y = 0
 for dir in listdir(ROOT):
@@ -40,5 +39,5 @@ for dir in listdir(ROOT):
     if 'ecg' in listdir(ROOT2):
         allStrips = listdir(path.join(ROOT2, 'ecg'))
 
-        for strip in allStrips:
-            print(strip)
+        #for strip in allStrips:
+        #    print(strip)
