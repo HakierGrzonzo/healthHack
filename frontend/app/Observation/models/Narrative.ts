@@ -3,14 +3,13 @@
 /* eslint-disable */
 
 export type Narrative = {
-    /**
-     * Limited xhtml content
-     */
-    div?: any;
-    id: string;
-    /**
-     * generated | extensions | additional | empty
-     */
-    status?: string;
+  /**
+   * Limited xhtml content
+   */
+  div?: any;
+  id: string;
+  /**
+   * generated | extensions | additional | empty
+   */
+  status?: string;
 };
-

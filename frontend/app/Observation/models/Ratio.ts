@@ -2,17 +2,16 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { Quantity } from './Quantity';
+import type { Quantity } from "./Quantity";
 
 export type Ratio = {
-    /**
-     * Denominator value
-     */
-    denominator?: Quantity;
-    id: string;
-    /**
-     * Numerator value
-     */
-    numerator?: Quantity;
+  /**
+   * Denominator value
+   */
+  denominator?: Quantity;
+  id: string;
+  /**
+   * Numerator value
+   */
+  numerator?: Quantity;
 };
-

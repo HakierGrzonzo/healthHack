@@ -29,8 +29,10 @@ const routes: { name: string; to: string }[] = [
 export default function Index() {
   const { user } = useLoaderData();
   const theme = useTheme();
-  const matches = useMatches()
-  const matchCandidates = matches.filter(m => routes.map(r => r.to).includes(m.pathname))
+  const matches = useMatches();
+  const matchCandidates = matches.filter((m) =>
+    routes.map((r) => r.to).includes(m.pathname)
+  );
   const [menuOpen, setMenuOpen] = useState<boolean>(true);
   return (
     <Box>
@@ -118,8 +120,8 @@ export default function Index() {
           sx={{
             flex: 1,
             margin: 1,
-            height: 'calc(100vh - 64px - 16px)',
-            overflow: 'scroll'
+            height: "calc(100vh - 64px - 16px)",
+            overflow: "scroll",
           }}
         >
           <Outlet />

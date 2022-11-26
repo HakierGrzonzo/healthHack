@@ -3,11 +3,10 @@
 /* eslint-disable */
 
 export type Age = {
-    code?: string;
-    comparator?: string;
-    id: string;
-    system?: string;
-    unit?: string;
-    value?: number;
+  code?: string;
+  comparator?: string;
+  id: string;
+  system?: string;
+  unit?: string;
+  value?: number;
 };
-
