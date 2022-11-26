@@ -28,6 +28,7 @@ import {
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import ConditionCard from "~/components/ConditionCard";
+import Loader from "~/components/Loader";
 import { Condition } from "~/Condition";
 import {
   fhirConditionClient,
@@ -123,19 +124,7 @@ export default function () {
     navigate(v);
   };
   if (transition.state === "loading") {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "4cm",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <Loader />;
   }
 
   const name = patient?.name?.at(0);
@@ -162,13 +151,15 @@ export default function () {
               {address?.postalCode} {address?.city}, {address?.state},{" "}
               {address?.country}
             </Typography>
+            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <Typography variant="body1">
+              {socialSecurity?.type?.coding?.at(0)?.display}:{" "}
+              {socialSecurity?.value}
+            </Typography>
           </CardContent>
         </Card>
         <Card>
-          <CardContent>
-            {socialSecurity?.type?.coding?.at(0)?.display}:{" "}
-            {socialSecurity?.value}
-          </CardContent>
+          <CardContent></CardContent>
         </Card>
         <ConditionCard conditions={conditions} />
       </Box>

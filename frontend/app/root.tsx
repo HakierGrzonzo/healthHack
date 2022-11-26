@@ -1,10 +1,4 @@
-import {
-  AppBar,
-  createTheme,
-  CssBaseline,
-  ThemeProvider,
-  Typography,
-} from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import type { MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -17,7 +11,7 @@ import {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "whih2 Patient Analysis and care",
   viewport: "width=device-width,initial-scale=1",
 });
 

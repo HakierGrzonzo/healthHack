@@ -23,16 +23,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 const routes: { name: string; to: string }[] = [
   { name: "Dashboard", to: "/doctor" },
   { name: "My Patients", to: "/doctor/my" },
-  { name: "login", to: "/login" },
+  { name: "Patient alerts", to: "/doctor/alerts" },
+  { name: "logout", to: "/login" },
 ];
 
 export default function Index() {
   const { user } = useLoaderData();
   const theme = useTheme();
   const matches = useMatches();
-  const matchCandidates = matches.filter((m) =>
-    routes.map((r) => r.to).includes(m.pathname)
-  );
+  const matchCandidate = matches
+    .filter((m) => routes.map((r) => r.to).includes(m.pathname))
+    .at(-1);
   const [menuOpen, setMenuOpen] = useState<boolean>(true);
   return (
     <Box>
@@ -68,6 +69,9 @@ export default function Index() {
             </IconButton>
             <Typography variant="h6">WHIH2</Typography>
           </Box>
+          <Typography variant="h6">
+            {routes.find((r) => matchCandidate?.pathname === r.to)?.name}
+          </Typography>
           <Typography>Welcome back {user.name}</Typography>
         </Toolbar>
       </AppBar>
@@ -91,7 +95,7 @@ export default function Index() {
         >
           <List sx={{ width: "5cm" }} component="nav">
             {routes.map((route) => {
-              const isSelected = matchCandidates.at(-1)?.pathname === route.to;
+              const isSelected = matchCandidate?.pathname === route.to;
               return (
                 <Link
                   to={route.to}

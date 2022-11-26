@@ -13,6 +13,10 @@ const COLUMN_DEFS: GridColDef[] = [
     headerName: "Type",
     width: 200,
   },
+  {
+    field: "category",
+    headerName: "Category",
+  },
 ];
 
 export default function ConditionCard(props: { conditions: Condition[] }) {
@@ -22,6 +26,7 @@ export default function ConditionCard(props: { conditions: Condition[] }) {
     day: "numeric",
     month: "short",
   });
+  console.log(conditions);
   return (
     <Card>
       <CardContent>
@@ -29,6 +34,7 @@ export default function ConditionCard(props: { conditions: Condition[] }) {
         <Box
           sx={{
             height: "10cm",
+            width: "500px",
           }}
         >
           <DataGrid
@@ -43,6 +49,7 @@ export default function ConditionCard(props: { conditions: Condition[] }) {
                 onsetDateTime: dateFormater.format(new Date(c.onsetDateTime)),
                 name: c.code.text,
                 id: c.id,
+                category: c.category?.at(0)?.coding?.at(0)?.display,
               }))}
             columns={COLUMN_DEFS}
           />
