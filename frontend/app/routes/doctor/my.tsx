@@ -51,11 +51,13 @@ export default function () {
           value={patients.find((p) => p.id === currentPatient) ?? ""}
           onChange={(e) => handleSelectChange(e.target.value as Patient)}
         >
-          {patients.map((patient) => (
-            <MenuItem value={patient} key={patient.id}>
-              {patient.name[0].given}
-            </MenuItem>
-          ))}
+          {patients
+            .sort((a, b) => a.name[0].family?.localeCompare(b.name[0].family))
+            .map((patient) => (
+              <MenuItem value={patient} key={patient.id}>
+                {patient.name[0].given} {patient.name[0].family}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
       <Divider />

@@ -1,3 +1,4 @@
+import { ConditionClient } from "./Condition";
 import { ObservationClient } from "./Observation";
 import { PatientClient } from "./Patient";
 
@@ -10,3 +11,5 @@ const config = {
 export const fhirPatientClient = new PatientClient(config);
 
 export const fhirObservationClient = new ObservationClient(config);
+
+export const fhirConditionClient = new ConditionClient(config);
