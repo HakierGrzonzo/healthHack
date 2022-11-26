@@ -11,7 +11,7 @@ import {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "whih2 Patient Analysis and care",
+  title: "NeuraHeart Patient Analysis and care",
   viewport: "width=device-width,initial-scale=1",
 });
 

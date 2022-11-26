@@ -29,7 +29,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export const meta: MetaFunction = () => {
-  return { title: "Hello to XYZ" };
+  return { title: "Hello to NeuraHeart" };
 };
 
 export default function Login() {
@@ -55,8 +55,8 @@ export default function Login() {
               width: "50vw",
             }}
           >
-            <Typography variant="h1">Hello</Typography>
-            <Typography variant="subtitle1">Welcome to whih2</Typography>
+            <img src="https://grzegorzkoperwas.site/transfer/logoh.png"/>
+            <Typography variant="subtitle1">Welcome to NeuraHeart</Typography>
             {actionMsg && <Alert severity="error">{actionMsg.msg}</Alert>}
             {transition.state !== "submitting" ? (
               <>
