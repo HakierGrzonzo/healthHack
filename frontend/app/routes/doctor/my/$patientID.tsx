@@ -107,7 +107,7 @@ export default function () {
     (i) => i.type?.coding?.at(0)?.code === "SS"
   );
 
-  const observationGroups = group(observations, (o) => o.code.coding[0].code);
+  const observationGroups = group(observations.filter(o => o.valueQuantity), (o) => o.code.coding[0].code);
 
   return (
     <>
@@ -133,7 +133,7 @@ export default function () {
       </Box>
       <Card>
         <CardContent>
-          <Typography variant="h6">Observations</Typography>
+          <Typography variant="h6">Observation Graphs</Typography>
           <FormControl sx={{ width: "10cm", marginTop: 1, marginBottom: 1 }}>
             <InputLabel id="my-group-select">Observation type</InputLabel>
             <Select
