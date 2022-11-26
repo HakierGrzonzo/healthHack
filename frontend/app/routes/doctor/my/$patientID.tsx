@@ -23,9 +23,7 @@ import {
   useMatches,
 } from "@remix-run/react";
 import Loader from "~/components/Loader";
-import {
-  fhirPatientClient,
-} from "~/fhir";
+import { fhirPatientClient } from "~/fhir";
 import { Patient } from "~/Patient";
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -52,7 +50,6 @@ export default function () {
   }
 
   const name = patient?.name?.at(0);
-  const address = patient?.address?.at(0);
   const socialSecurity = patient.identifier?.find(
     (i) => i.type?.coding?.at(0)?.code === "SS"
   );
@@ -78,42 +75,37 @@ export default function () {
     .filter((m) => routes.map((r) => r.value).includes(m));
 
   return (
-      <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
-        <Card sx={{ margin: 1 }}>
-          <CardContent>
-            <Typography variant="h6">
-              {name?.prefix} {name?.given} {name?.family} {name?.suffix}
-            </Typography>
-            <Typography variant="body1">{address?.line}</Typography>
-            <Typography variant="body1">
-              {address?.postalCode} {address?.city}, {address?.state},{" "}
-              {address?.country}
-            </Typography>
-            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-            <Typography variant="body1">
-              {socialSecurity?.type?.coding?.at(0)?.display}:{" "}
-              {socialSecurity?.value}
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ margin: 1, flex: 1 }}>
-          <CardContent>
-            <Box
-              sx={{
-                borderBottom: 1,
-                borderColor: "divider",
-              }}
-            >
-              <Tabs value={matches.at(-1)}>
-                {routes.map((r) => (
-                  <Tab key={r.value} {...r} component={Link} />
-                ))}
-              </Tabs>
-            </Box>
-            <Outlet />
-          </CardContent>
-        </Card>
-      </Box>
+    <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
+      <Card sx={{ margin: 1 }}>
+        <CardContent>
+          <Typography variant="h6">
+            {name?.prefix} {name?.given} {name?.family} {name?.suffix}
+          </Typography>
+          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+          <Typography variant="body1">
+            <strong>{socialSecurity?.type?.coding?.at(0)?.display}</strong>{" "}
+            {socialSecurity?.value}
+          </Typography>
+        </CardContent>
+      </Card>
+      <Card sx={{ margin: 1, flex: 1 }}>
+        <CardContent>
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+            }}
+          >
+            <Tabs value={matches.at(-1)}>
+              {routes.map((r) => (
+                <Tab key={r.value} {...r} component={Link} />
+              ))}
+            </Tabs>
+          </Box>
+          <Outlet />
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
 

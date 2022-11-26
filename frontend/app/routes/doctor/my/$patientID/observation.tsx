@@ -70,7 +70,7 @@ export default function Observation() {
   );
 
   return (
-    <Box sx={{marginTop: 3}}>
+    <Box sx={{ marginTop: 3 }}>
       <FormControl sx={{ width: "10cm", marginTop: 1, marginBottom: 1 }}>
         <InputLabel id="my-group-select">Observation type</InputLabel>
         <Select

@@ -28,27 +28,27 @@ export default function ConditionCard(props: { conditions: Condition[] }) {
     month: "short",
   });
   return (
-        <Box
-          sx={{
-            height: "10cm",
-          }}
-        >
-          <DataGrid
-            rows={conditions
-              .sort((a, b) => {
-                return (
-                  new Date(b.onsetDateTime).valueOf() -
-                  new Date(a.onsetDateTime).valueOf()
-                );
-              })
-              .map((c) => ({
-                onsetDateTime: dateFormater.format(new Date(c.onsetDateTime)),
-                name: c.code.text,
-                id: c.id,
-                category: c.category?.at(0)?.coding?.at(0)?.display,
-              }))}
-            columns={COLUMN_DEFS}
-          />
-        </Box>
+    <Box
+      sx={{
+        height: "10cm",
+      }}
+    >
+      <DataGrid
+        rows={conditions
+          .sort((a, b) => {
+            return (
+              new Date(b.onsetDateTime).valueOf() -
+              new Date(a.onsetDateTime).valueOf()
+            );
+          })
+          .map((c) => ({
+            onsetDateTime: dateFormater.format(new Date(c.onsetDateTime)),
+            name: c.code.text,
+            id: c.id,
+            category: c.category?.at(0)?.coding?.at(0)?.display,
+          }))}
+        columns={COLUMN_DEFS}
+      />
+    </Box>
   );
 }
