@@ -1,6 +1,8 @@
-import { CircularProgress, Box, Typography, Card, CardContent, Alert, AlertTitle } from "@mui/material";
+import { ScreenLockLandscapeTwoTone } from "@mui/icons-material";
+import { CircularProgress, Box, Typography, Card, CardContent, Alert, AlertTitle, FormControl, InputLabel, Select, MenuItem, Divider } from "@mui/material";
 import { ErrorBoundaryComponent, json, LoaderFunction } from "@remix-run/node";
-import { useLoaderData, useTransition } from "@remix-run/react";
+import { Outlet, useLoaderData, useNavigate, useParams, useTransition } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { fhirObservationClient, fhirPatientClient } from "~/fhir";
 import { Patient } from "~/Patient";
 import { group } from "~/utils";
@@ -48,6 +50,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 export default function () {
   const {patient, observations}: {patient: Patient, observations: Observation[]} = useLoaderData();
   const transition = useTransition();
+  const [selectedGroup, setSelectedGroup] = useState<string | null>();
+  const {observationType} = useParams();
+  const navigate = useNavigate()
+  useEffect(() => {observationType && setSelectedGroup(observationType)}, [observationType])
+  const handleSelectChange = (v: string) => {
+    setSelectedGroup(v)
+    navigate(v)
+  }
   if (transition.state === "loading") {
     return (
       <Box
@@ -68,9 +78,10 @@ export default function () {
   const address = patient?.address?.at(0)
   const socialSecurity = patient.identifier?.find(i => i.type?.coding?.at(0)?.code === "SS")
 
-  const observationGroups = group(observations, o => o.code.text)
+  const observationGroups = group(observations, o => o.code.coding[0].code)
 
   return (
+    <>
     <Box sx={{marginTop: 1, display: 'flex', flexWrap: 'wrap', gap: 4}}>
       <Card>
         <CardContent>
@@ -84,21 +95,33 @@ export default function () {
           {socialSecurity?.type?.coding?.at(0)?.display}: {socialSecurity?.value}
         </CardContent>
       </Card>
-      {Object.entries(observationGroups).map(entry => {
-        const [group, observations] = entry;
-        return (
-      <Card key={group}>
+    </Box>
+      <Card>
         <CardContent>
-        {group}, {observations.length}
-        {observations.map(o => (
-          <p key={o.id}>
-            {o?.valueQuantity?.value} - {o?.issued}
-          </p>
-        ))}
+          <Typography variant="h6">Observations</Typography>
+          <FormControl sx={{width: "10cm", marginTop: 1, marginBottom: 1}}>
+            <InputLabel id="my-group-select">Observation type</InputLabel>
+            <Select
+              labelId="my-group-select"
+              label="Observation type"
+              value={selectedGroup || ''}
+              onChange={(e) => handleSelectChange(e.target.value)}
+            >
+              {Object.entries(observationGroups).map(entry => {
+                const [code, observations] = entry;
+                const name = observations.at(0).code.text
+                return (
+                <MenuItem value={code} key={code}>{name}</MenuItem>
+              )})}
+            </Select>
+          </FormControl>
+          <Divider/>
+          <Box sx={{marginTop: 1}}>
+            <Outlet/>
+          </Box>
         </CardContent>
       </Card>
-      )})}
-    </Box>
+    </>
   );
 }
 

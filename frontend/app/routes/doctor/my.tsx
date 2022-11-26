@@ -10,7 +10,7 @@ import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
   Outlet,
   useLoaderData,
-  useLocation,
+  useParams,
   useNavigate,
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
@@ -30,15 +30,11 @@ export const meta: MetaFunction = () => {
 export default function () {
   const patients: Patient[] = useLoaderData();
   const [currentPatient, setCurrentPatient] = useState<string | null>(null);
-  const location = useLocation();
+  const {patientID} = useParams()
   useEffect(() => {
     // Always make sure the url matches the selection
-    const currentPatientID = location.pathname.split("/").at(-1);
-    const currentPatient = patients.find((p) => p.id === currentPatientID);
-    if (currentPatient && currentPatientID) {
-      setCurrentPatient(currentPatientID);
-    }
-  }, [location, patients, setCurrentPatient]);
+    patientID && setCurrentPatient(patientID);
+  }, [patientID]);
   const navigate = useNavigate();
   const handleSelectChange = (patient: Patient) => {
     // The select value will be extracted from the url

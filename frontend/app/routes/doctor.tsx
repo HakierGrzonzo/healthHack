@@ -118,6 +118,8 @@ export default function Index() {
           sx={{
             flex: 1,
             margin: 1,
+            height: 'calc(100vh - 64px - 16px)',
+            overflow: 'scroll'
           }}
         >
           <Outlet />
