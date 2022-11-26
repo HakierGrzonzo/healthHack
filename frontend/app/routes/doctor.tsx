@@ -129,14 +129,19 @@ export default function Index() {
           }}
         >
           <Box sx={{
-            overflow: "scroll",
+            overflowY: "auto",
+            overflowX: "hidden",
             height: "calc(100vh - 64px - 16px - 1cm)"
             }}>
             <Outlet />
           </Box>
           <Box sx={{height: '1cm', display: 'flex', justifyContent: 'space-between'}}>
-            <Typography variant="caption" color={theme.palette.grey[400]}>NOT FIT FOR MEDICAL USE</Typography>
-            <Typography variant="caption" color={theme.palette.grey[400]}>Copyright 2022 <code>[object Object]</code> for EHH 2022</Typography>
+            <Typography variant="caption">
+              <Link to="/support" style={{color: theme.palette.grey[600]}}>Support</Link>{" "}
+              <a href="https://github.com/HakierGrzonzo/healthHack" style={{color: theme.palette.grey[600]}}>Github</a>
+            </Typography>
+            <Typography variant="caption" color={theme.palette.grey[600]}><strong>NOT FIT FOR MEDICAL USE</strong></Typography>
+            <Typography variant="caption" color={theme.palette.grey[600]}>Copyright 2022 <code>[object Object]</code> for EHH 2022</Typography>
           </Box>
         </Box>
       </Box>
