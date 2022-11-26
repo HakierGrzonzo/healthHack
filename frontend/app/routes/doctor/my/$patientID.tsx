@@ -1,17 +1,13 @@
-import { ScreenLockLandscapeTwoTone } from "@mui/icons-material";
 import {
-  CircularProgress,
   Box,
   Typography,
   Card,
   CardContent,
   Alert,
   AlertTitle,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Divider,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import {
   ErrorBoundaryComponent,
@@ -21,87 +17,26 @@ import {
 } from "@remix-run/node";
 import {
   Outlet,
+  Link,
   useLoaderData,
-  useNavigate,
-  useParams,
   useTransition,
+  useMatches,
 } from "@remix-run/react";
-import { useEffect, useState } from "react";
-import ConditionCard from "~/components/ConditionCard";
 import Loader from "~/components/Loader";
-import { Condition } from "~/Condition";
 import {
-  fhirConditionClient,
-  fhirObservationClient,
   fhirPatientClient,
 } from "~/fhir";
-import { Observation } from "~/Observation";
 import { Patient } from "~/Patient";
-import { group } from "~/utils";
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const patient = await fhirPatientClient.patient.getPatient1(params.patientID);
-  const conditions = await fhirConditionClient.condition.getCondition(
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    params.patientID
-  );
-  const observations = await fhirObservationClient.observation.getObservation(
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    params.patientID
-  );
   return json({
     patient: JSON.parse(patient),
-    observations: JSON.parse(observations).entry.map((e) => e.resource),
-    conditions: JSON.parse(conditions).entry.map((e) => e.resource),
   });
 };
 
 interface IData {
   patient: Patient;
-  observations: Observation[];
-  conditions: Condition[];
 }
 
 export const meta: MetaFunction = ({ data }) => ({
@@ -109,20 +44,9 @@ export const meta: MetaFunction = ({ data }) => ({
 });
 
 export default function () {
-  const { patient, observations, conditions }: IData = useLoaderData();
+  const { patient }: IData = useLoaderData();
   const transition = useTransition();
-  const { observationType } = useParams();
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(
-    observationType ?? null
-  );
-  const navigate = useNavigate();
-  useEffect(() => {
-    observationType && setSelectedGroup(observationType);
-  }, [observationType]);
-  const handleSelectChange = (v: string) => {
-    setSelectedGroup(v);
-    navigate(v);
-  };
+
   if (transition.state === "loading") {
     return <Loader />;
   }
@@ -132,16 +56,30 @@ export default function () {
   const socialSecurity = patient.identifier?.find(
     (i) => i.type?.coding?.at(0)?.code === "SS"
   );
-
-  const observationGroups = group(
-    observations.filter((o) => o.valueQuantity),
-    (o) => o.code.coding[0].code
-  );
+  const routes = [
+    {
+      label: "Patient Details",
+      value: "routes/doctor/my/$patientID",
+      to: ".",
+    },
+    {
+      label: "Observation Graphs",
+      value: "routes/doctor/my/$patientID/observation",
+      to: "observation",
+    },
+    {
+      label: "Patient history",
+      value: "routes/doctor/my/$patientID/history",
+      to: "history",
+    },
+  ];
+  const matches = useMatches()
+    .map((m) => m.id)
+    .filter((m) => routes.map((r) => r.value).includes(m));
 
   return (
-    <>
-      <Box sx={{ margin: 1, display: "flex", flexWrap: "wrap", gap: 1 }}>
-        <Card>
+      <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
+        <Card sx={{ margin: 1 }}>
           <CardContent>
             <Typography variant="h6">
               {name?.prefix} {name?.given} {name?.family} {name?.suffix}
@@ -158,40 +96,24 @@ export default function () {
             </Typography>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent></CardContent>
-        </Card>
-        <ConditionCard conditions={conditions} />
-      </Box>
-      <Card sx={{ margin: 1 }}>
-        <CardContent>
-          <Typography variant="h6">Observation Graphs</Typography>
-          <FormControl sx={{ width: "10cm", marginTop: 1, marginBottom: 1 }}>
-            <InputLabel id="my-group-select">Observation type</InputLabel>
-            <Select
-              labelId="my-group-select"
-              label="Observation type"
-              value={selectedGroup || ""}
-              onChange={(e) => handleSelectChange(e.target.value)}
+        <Card sx={{ margin: 1, flex: 1 }}>
+          <CardContent>
+            <Box
+              sx={{
+                borderBottom: 1,
+                borderColor: "divider",
+              }}
             >
-              {Object.entries(observationGroups).map((entry) => {
-                const [code, observations] = entry;
-                const name = observations.at(0).code.text;
-                return (
-                  <MenuItem value={code} key={code}>
-                    {name}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <Divider />
-          <Box sx={{ marginTop: 1 }}>
+              <Tabs value={matches.at(-1)}>
+                {routes.map((r) => (
+                  <Tab key={r.value} {...r} component={Link} />
+                ))}
+              </Tabs>
+            </Box>
             <Outlet />
-          </Box>
-        </CardContent>
-      </Card>
-    </>
+          </CardContent>
+        </Card>
+      </Box>
   );
 }
 
