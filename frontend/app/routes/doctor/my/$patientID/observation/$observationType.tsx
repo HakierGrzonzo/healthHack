@@ -65,6 +65,7 @@ export default function () {
   const options = {
     chart: {
       zoomType: "x",
+      animation: true
     },
     title: {
       text: name,

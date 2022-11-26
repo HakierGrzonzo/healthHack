@@ -67,7 +67,7 @@ export default function Index() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6">WHIH2</Typography>
+            <Typography variant="h6">NeuraHeart</Typography>
           </Box>
           <Typography variant="h6">
             {routes.find((r) => matchCandidate?.pathname === r.to)?.name}
