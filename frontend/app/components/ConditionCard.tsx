@@ -11,11 +11,12 @@ const COLUMN_DEFS: GridColDef[] = [
   {
     field: "name",
     headerName: "Type",
-    width: 200,
+    width: 400,
   },
   {
     field: "category",
     headerName: "Category",
+    width: 200,
   },
 ];
 
@@ -26,15 +27,10 @@ export default function ConditionCard(props: { conditions: Condition[] }) {
     day: "numeric",
     month: "short",
   });
-  console.log(conditions);
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h6">Patient History</Typography>
         <Box
           sx={{
             height: "10cm",
-            width: "500px",
           }}
         >
           <DataGrid
@@ -54,7 +50,5 @@ export default function ConditionCard(props: { conditions: Condition[] }) {
             columns={COLUMN_DEFS}
           />
         </Box>
-      </CardContent>
-    </Card>
   );
 }
