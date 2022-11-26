@@ -115,20 +115,29 @@ export default function Index() {
             })}
           </List>
           <Box sx={{ padding: 1, width: "5cm" }}>
-            <Typography variant="caption">
-              Powered by <strong>Grzes</strong>hosting
-            </Typography>
+            <img
+              src="https://grzegorzkoperwas.site/transfer/logoh.png"
+              style={{ width: "100%" }}
+            />
           </Box>
         </Box>
         <Box
           sx={{
             flex: 1,
-            margin: 1,
             height: "calc(100vh - 64px - 16px)",
-            overflow: "scroll",
+            margin: 1,
           }}
         >
-          <Outlet />
+          <Box sx={{
+            overflow: "scroll",
+            height: "calc(100vh - 64px - 16px - 1cm)"
+            }}>
+            <Outlet />
+          </Box>
+          <Box sx={{height: '1cm', display: 'flex', justifyContent: 'space-between'}}>
+            <Typography variant="caption" color={theme.palette.grey[400]}>NOT FIT FOR MEDICAL USE</Typography>
+            <Typography variant="caption" color={theme.palette.grey[400]}>Copyright 2022 <code>[object Object]</code> for EHH 2022</Typography>
+          </Box>
         </Box>
       </Box>
     </Box>

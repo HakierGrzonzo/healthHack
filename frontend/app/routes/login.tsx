@@ -55,7 +55,7 @@ export default function Login() {
               width: "50vw",
             }}
           >
-            <img src="https://grzegorzkoperwas.site/transfer/logoh.png"/>
+            <img src="https://grzegorzkoperwas.site/transfer/logoh.png" />
             <Typography variant="subtitle1">Welcome to NeuraHeart</Typography>
             {actionMsg && <Alert severity="error">{actionMsg.msg}</Alert>}
             {transition.state !== "submitting" ? (

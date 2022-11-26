@@ -1,4 +1,4 @@
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { Alert, AlertTitle, Box, createTheme, CssBaseline, ThemeProvider, Typography } from "@mui/material";
 import type { MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -38,4 +38,23 @@ export default function App() {
       </body>
     </html>
   );
+}
+
+export function CatchBoundary() {
+  return (
+    <Box sx={{
+        display: 'flex',
+        alignItems: 'center',
+        height: '100vh',
+        justifyContent: 'center'
+      }}>
+      <Alert severity="error" sx={{width: "15cm"}}>
+        <AlertTitle>You don't have permission to access this page!</AlertTitle>
+        <Typography variant="body1">
+          You don't have permissions to access this page, please contact your 
+          supervisor if those permissions are necessary for your work.
+        </Typography>
+      </Alert>
+    </Box>
+  )
 }

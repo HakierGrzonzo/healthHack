@@ -8,6 +8,9 @@ import {
   Divider,
   Tabs,
   Tab,
+  CardActions,
+  Button,
+  Tooltip,
 } from "@mui/material";
 import {
   ErrorBoundaryComponent,
@@ -22,6 +25,7 @@ import {
   useTransition,
   useMatches,
 } from "@remix-run/react";
+import { differenceInYears } from "date-fns";
 import Loader from "~/components/Loader";
 import { fhirPatientClient } from "~/fhir";
 import { Patient } from "~/Patient";
@@ -76,18 +80,61 @@ export default function () {
 
   return (
     <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
-      <Card sx={{ margin: 1 }}>
-        <CardContent>
-          <Typography variant="h6">
-            {name?.prefix} {name?.given} {name?.family} {name?.suffix}
-          </Typography>
-          <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
-          <Typography variant="body1">
-            <strong>{socialSecurity?.type?.coding?.at(0)?.display}</strong>{" "}
-            {socialSecurity?.value}
-          </Typography>
-        </CardContent>
-      </Card>
+      <Box sx={{ margin: 1, display: "flex", gap: 3, flexDirection: "column" }}>
+        <Card>
+          <CardContent>
+            <Typography variant="h6">
+              {name?.prefix} {name?.given} {name?.family} {name?.suffix}
+            </Typography>
+            <Divider sx={{ marginTop: 1, marginBottom: 2 }} />
+            <Typography variant="body1">
+              <strong>{socialSecurity?.type?.coding?.at(0)?.display}</strong>{" "}
+              {socialSecurity?.value}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            <Typography variant="h6">Patient information</Typography>
+            <Divider sx={{ marginTop: 1, marginBottom: 2 }} />
+            <Box
+              sx={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 1 }}
+            >
+              <Typography variant="body1">
+                <strong>Age</strong>
+              </Typography>
+              <Typography variant="body1">
+                {differenceInYears(new Date(), new Date(patient.birthDate))}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Birthday</strong>
+              </Typography>
+              <Typography variant="body1">
+                {Intl.DateTimeFormat("en", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }).format(new Date(patient.birthDate))}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Marital status</strong>
+              </Typography>
+              <Typography variant="body1">
+                {patient.maritalStatus?.text}
+              </Typography>
+            </Box>
+          </CardContent>
+          <CardActions>
+            <Tooltip title="Current user has no write permissions">
+              <span>
+                <Button variant="contained" disabled>
+                  Edit
+                </Button>
+              </span>
+            </Tooltip>
+          </CardActions>
+        </Card>
+      </Box>
       <Card sx={{ margin: 1, flex: 1 }}>
         <CardContent>
           <Box
