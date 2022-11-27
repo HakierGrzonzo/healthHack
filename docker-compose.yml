@@ -1,0 +1,14 @@
+services:
+  front:
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      dockerfile: Dockerfile.front
+    depends_on:
+      - predict 
+
+  predict:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
