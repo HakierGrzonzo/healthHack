@@ -34,6 +34,6 @@ def predict(item: Item):
     return getDisease(item.symptoms)
 
 @app.post('/ecg')
-def predict(item: Item):
-    return getDiagnose(item.symptoms)
+def predict(json: str):
+    return getDiagnose(json)
 
