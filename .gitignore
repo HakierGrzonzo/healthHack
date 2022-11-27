@@ -1,2 +1,4 @@
 /data/
 /video/
+/backend/hackathon-alivecors/
+*.pyc

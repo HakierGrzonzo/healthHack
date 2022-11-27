@@ -1,21 +1,17 @@
 import {
   Box,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
   Alert,
   Button,
   Typography,
   List,
   CircularProgress,
+  ListItem,
+  AlertTitle,
 } from "@mui/material";
 import { ActionFunction, redirect, json } from "@remix-run/node";
 import { Form, useActionData, useTransition } from "@remix-run/react";
+import {SymptomPredictClient} from "~/local"
 import EcgIcon from "~/components/EcgIcon";
-import { loaderPocketBase, usePocketBase } from "~/pocketbase";
 
 const codes = {
   "I48.0": "Paroxysmal atrial fibrillation",
@@ -46,16 +42,10 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const file: File = formData.get("file");
   const text = await file.text();
-  const data = {
-    strip: text,
-  };
-  try {
-    const pb = loaderPocketBase(request);
-    await pb.collection("stripes").create(data);
-    return null;
-  } catch {
-    return json({ msg: "something went wrong" });
-  }
+  const response = await SymptomPredictClient.default.predictEcgPost({
+    file_content: text,
+  })
+  return json(response)
 };
 
 export default function Ecg() {
@@ -65,21 +55,19 @@ export default function Ecg() {
     <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
       <Box sx={{ maxWidth: "20cm" }}>
         <EcgIcon />
-        <Typography variant="body1">
-          <ul>
-            <li>Here you can send ECG file to our server for analysis</li>
-            <li>After analysis you will be able to see the results</li>
-            <li>
+          <List>
+            <ListItem>Here you can send ECG file to our server for analysis</ListItem>
+            <ListItem>After analysis you will be able to see the results</ListItem>
+            <ListItem>
               You will see code and description of the disease that is most
               likely to be diagnosed
-            </li>
-            <li>
+            </ListItem>
+            <ListItem>
               If you have any information beside "Not diagnosed any heart
               disease" please contact your doctor
-            </li>
-            <li>More files you send, more accurate results you will get</li>
-          </ul>
-        </Typography>
+            </ListItem>
+            <ListItem>More files you send, more accurate results you will get</ListItem>
+          </List>
         <Form encType="multipart/form-data" method="post">
           <Box
             sx={{
@@ -88,7 +76,6 @@ export default function Ecg() {
               justifyContent: "space-around",
             }}
           >
-            {actionMsg && <Alert severity="error">{actionMsg.msg}</Alert>}
             {transition.state !== "submitting" ? (
               <Button component="label">
                 Upload File
@@ -103,17 +90,13 @@ export default function Ecg() {
           </Box>
         </Form>
 
-        <Typography variant="h5">Results</Typography>
-        <List>
-          <li>
-            <Typography variant="body1">I48.0</Typography>
-            <Typography variant="body1">
-              Paroxysmal atrial fibrillation
-            </Typography>
-          </li>
-        </List>
+        {actionMsg && (
+          <Alert severity="success">
+            <AlertTitle>Succesfully analyzed the data</AlertTitle>
+            Suspected condition: {actionMsg} - {codes[actionMsg] ?? ""}
+          </Alert>
+        )}
       </Box>
-      <Box sx={{ maxWidth: "20cm" }}>tu będzie wykres jak będzie czas</Box>
     </Box>
   );
 }

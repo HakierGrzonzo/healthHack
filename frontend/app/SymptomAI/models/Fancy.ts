@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type Item = {
-    symptoms: Array<string>;
+export type Fancy = {
+    file_content: string;
 };
 

@@ -33,7 +33,10 @@ def hello():
 def predict(item: Item):
     return getDisease(item.symptoms)
 
+class Fancy(BaseModel):
+    file_content: str
+
 @app.post('/ecg')
-def predict(json: str):
-    return getDiagnose(json)
+def predict(json: Fancy):
+    return getDiagnose(json.file_content)
 
