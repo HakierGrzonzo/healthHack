@@ -10,7 +10,8 @@ import {
   useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { json, LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useMatches } from "@remix-run/react";
 import { useState } from "react";
 import { loaderPocketBase } from "~/pocketbase";
@@ -24,6 +25,7 @@ const routes: { name: string; to: string }[] = [
   { name: "Dashboard", to: "/doctor" },
   { name: "My Patients", to: "/doctor/my" },
   { name: "Patient alerts", to: "/doctor/alerts" },
+  { name: "ECG analyze", to: "/doctor/ecg" },
   { name: "logout", to: "/login" },
 ];
 
