@@ -26,6 +26,7 @@ import {
   useMatches,
 } from "@remix-run/react";
 import { differenceInYears } from "date-fns";
+import FakeButton from "~/components/FakeButton";
 import Loader from "~/components/Loader";
 import { fhirPatientClient } from "~/fhir";
 import { Patient } from "~/Patient";
@@ -79,7 +80,7 @@ export default function () {
     .filter((m) => routes.map((r) => r.value).includes(m));
 
   return (
-    <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
+    <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start", flexWrap: 'wrap' }}>
       <Box sx={{ margin: 1, display: "flex", gap: 3, flexDirection: "column" }}>
         <Card>
           <CardContent>
@@ -125,17 +126,19 @@ export default function () {
             </Box>
           </CardContent>
           <CardActions>
-            <Tooltip title="Current user has no write permissions">
-              <span>
-                <Button variant="contained" disabled>
-                  Edit
-                </Button>
-              </span>
-            </Tooltip>
+            <FakeButton tooltip="Current user has no write permissions" text="Edit"/>
           </CardActions>
         </Card>
+        <Card>
+          <CardContent sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+            <Typography variant="h6">Patient treatment</Typography>
+            <Divider/>
+            <FakeButton tooltip="Current user has no note access" text="Patient notes"/>
+            <FakeButton tooltip="Current user has no medication access" text="View patient medications"/>
+          </CardContent>
+        </Card>
       </Box>
-      <Card sx={{ margin: 1, flex: 1 }}>
+      <Card sx={{ margin: 1, flex: 1, minWidth: "10cm" }}>
         <CardContent>
           <Box
             sx={{
@@ -143,7 +146,7 @@ export default function () {
               borderColor: "divider",
             }}
           >
-            <Tabs value={matches.at(-1)}>
+            <Tabs value={matches.at(-1)} scrollButtons>
               {routes.map((r) => (
                 <Tab key={r.value} {...r} component={Link} />
               ))}
