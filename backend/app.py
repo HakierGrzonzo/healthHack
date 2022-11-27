@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List
 
 from Analize import createModel, getDisease
+from ECG import createECGModel, getDiagnose
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -22,6 +23,7 @@ class Item(BaseModel):
 @app.on_event("startup")
 async def startup_event():
     createModel()
+    createECGModel()
 
 @app.get('/')
 def hello():
@@ -30,3 +32,8 @@ def hello():
 @app.post('/')
 def predict(item: Item):
     return getDisease(item.symptoms)
+
+@app.post('/ecg')
+def predict(item: Item):
+    return getDiagnose(item.symptoms)
+
